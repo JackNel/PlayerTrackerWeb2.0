@@ -90,6 +90,15 @@ public class Main {
         stmt.execute();
     }
 
+    public static void updatePlayer (Connection conn, String name, String team, String position, int id) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("UPDATE players SET name = ?, team = ?, position = ? WHERE id = ?");
+        stmt.setString(1, name);
+        stmt.setString(2, team);
+        stmt.setString(3, position);
+        stmt.setInt(4, id);
+        stmt.execute();
+    }
+
 
 
 
@@ -107,7 +116,6 @@ public class Main {
                     String username = session.attribute("username");
 
                     ArrayList<Player> playersAL = selectPlayers(conn);
-
 
                     for (Player player : playersAL) {
                         if (player.creator.equals(username)) {
@@ -185,6 +193,52 @@ public class Main {
                     }
 
                     response.redirect(request.headers("Referer"));
+                    return "";
+                })
+        );
+
+        Spark.get (
+                "/edit",
+                ((request, response) -> {
+                    Session session = request.session();
+                    String username = session.attribute("username");
+
+                    if (username == null) {
+                        System.out.println("Username = null");
+                        Spark.halt(403);
+                    }
+
+                    int id = Integer.valueOf(request.queryParams("id"));
+                    Player player = selectPlayer(conn, id);
+
+                    HashMap m = new HashMap();
+
+                    m.put("username", username);
+                    m.put("player", player);
+
+                    return new ModelAndView(m, "/edit.html");
+                }),
+                new MustacheTemplateEngine());
+
+        Spark.post (
+                "/edit-entry",
+                ((request, response) -> {
+                    Session session = request.session();
+                    String username = session.attribute("username");
+
+                    if (username == null) {
+                        System.out.println("Username = null");
+                        Spark.halt(403);
+                    }
+
+                    String newName = request.queryParams("editName");
+                    String newTeam = request.queryParams("editTeam");
+                    String newPosition = request.queryParams("editPosition");
+
+                    int id = Integer.valueOf(request.queryParams("id"));
+                    updatePlayer(conn, newName, newTeam, newPosition, id);
+
+                    response.redirect("/");
                     return "";
                 })
         );
