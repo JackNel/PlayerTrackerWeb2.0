@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player Tracker</title>
+</head>
+<body>
+<b>The NFL Player Tracker</b><br>
+
+<!--Not logged In--->
+{{^username}}
+<form action="login" method="post">
+    <input type="text" placeholder="Username" name="username"/>
+    <input type="password" placeholder="Password" name="password"/>
+    <button type="submit">Login or Create Account</button>
+</form>
+<br>
+{{#players}}
+{{name}}, {{position}} - {{team}} - entry created by {{creator}}<br>
+{{/players}}
+{{/username}}
+
+
+
+
+
+
+<!--Logged In--->
+{{#username}}
+Welcome, {{username}}!
+<form action="logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+<br><br>
+
+<form action="create-entry" method="post">
+    <input type="text" placeholder="New Entry" name="playerName" size="50"/>
+    <select name="playerTeam">
+        <option value="49ers">49ers</option>
+        <option value="Bears">Bears</option>
+        <option value="Bengals">Bengals</option>
+        <option value="Bills">Bills</option>
+        <option value="Broncos">Broncos</option>
+        <option value="Browns">Browns</option>
+        <option value="Bucaneers">Bucaneers</option>
+        <option value="Cardinals">Cardinals</option>
+        <option value="Chargers">Chargers</option>
+        <option value="Cheifs">Cheifs</option>
+        <option value="Colts">Colts</option>
+        <option value="Cowboys">Cowboys</option>
+        <option value="Dolphins">Dolphins</option>
+        <option value="Eagles">Eagles</option>
+        <option value="Falcons">Falcons</option>
+        <option value="Giants">Giants</option>
+        <option value="Jaguars">Jaguars</option>
+        <option value="Jets">Jets</option>
+        <option value="Lions">Lions</option>
+        <option value="Packers">Packers</option>
+        <option value="Panthers">Panthers</option>
+        <option value="Patriots">Patriots</option>
+        <option value="Raiders">Raiders</option>
+        <option value="Rams">Rams</option>
+        <option value="Ravens">Ravens</option>
+        <option value="Redskins">Redskins</option>
+        <option value="Saints">Saints</option>
+        <option value="Seahawks">Seahawks</option>
+        <option value="Steelers">Steelers</option>
+        <option value="Texans">Texans</option>
+        <option value="Titans">Titans</option>
+        <option value="Vikings">Vikings</option>
+        <option value="Free Agent">Free Agent</option>
+        <option value="Retired">Retired</option>
+    </select>
+    <select name="position">
+        <option value="QB">QB</option>
+        <option value="HB">HB</option>
+        <option value="FB">FB</option>
+        <option value="WR">WR</option>
+        <option value="TE">TE</option>
+        <option value="LT">LT</option>
+        <option value="LG">LG</option>
+        <option value="C">C</option>
+        <option value="RG">RG</option>
+        <option value="RT">RT</option>
+        <option value="LE">LE</option>
+        <option value="DT">DT</option>
+        <option value="RE">RE</option>
+        <option value="LOLB">LOLB</option>
+        <option value="MLB">MLB</option>
+        <option value="ROLB">ROLB</option>
+        <option value="CB">CB</option>
+        <option value="FS">FS</option>
+        <option value="SS">SS</option>
+        <option value="K">K</option>
+        <option value="P">P</option>
+    </select>
+    <button tpye="submit">Create</button>
+</form>
+<br>
+{{#players}}
+{{name}}, {{position}} - {{team}} - entry created by {{creator}}
+{{#isCreator}}
+<a href="edit?id={{id}}">Edit</a>
+<form action="delete-entry" method="post" style="display:inline">
+    <input type="hidden" name="id" value="{{id}}"/>
+    <button type="submit">Delete</button>
+</form>
+{{/isCreator}}
+<br>
+{{/players}}
+{{/username}}
+
+
+
+</body>
+</html>
