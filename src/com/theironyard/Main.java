@@ -100,6 +100,12 @@ public class Main {
         stmt.execute();
     }
 
+    public static void deletePlayer (Connection conn, int id) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM players WHERE id = ?");
+        stmt.setInt(1, id);
+        stmt.execute();
+    }
+
 
 
 
@@ -249,6 +255,17 @@ public class Main {
 
                     int id = Integer.valueOf(request.queryParams("id"));
                     updatePlayer(conn, newName, newTeam, newPosition, id);
+
+                    response.redirect("/");
+                    return "";
+                })
+        );
+
+        Spark.post (
+                "/delete-entry",
+                ((request, response) -> {
+                    int id = Integer.valueOf(request.queryParams("id"));
+                    deletePlayer(conn, id);
 
                     response.redirect("/");
                     return "";
