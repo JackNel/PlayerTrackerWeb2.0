@@ -1,5 +1,6 @@
 package com.theironyard;
 
+import org.h2.tools.Server;
 import spark.ModelAndView;
 import spark.Session;
 import spark.Spark;
@@ -109,6 +110,9 @@ public class Main {
         Connection conn = DriverManager.getConnection("jdbc:h2:./main");
         createTables(conn);
 
+        Server webServer = Server.createWebServer().start();
+        System.out.println(webServer);
+
         Spark.get (
                 "/",
                 ((request, response) -> {
@@ -120,6 +124,14 @@ public class Main {
                     for (Player player : playersAL) {
                         if (player.creator.equals(username)) {
                             player.isCreator = true;
+                            updateBoolean(conn, true, player.id);
+                        }
+                    }
+
+                    for (Player player : playersAL) {
+                        if (!player.creator.equals(username)) {
+                            player.isCreator = false;
+                            updateBoolean(conn, false, player.id);
                         }
                     }
 
